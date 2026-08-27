@@ -1,16 +1,14 @@
-// import { Navigate, Outlet } from 'react-router-dom';
-// import { useIsAuthenticated } from '../../hooks/authHooks';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useIsAuthenticated } from '../../hooks/authHooks';
 
-// const ProtectedRoute = () => {
-//   const isLoggedIn  = useIsAuthenticated();
+const ProtectedRoute = () => {
+  const isLoggedIn = useIsAuthenticated();
 
-//   if (!isLoggedIn) {
-//     // If not authenticated, redirect to login page
-//     return <Navigate to="/login" />;
-//   }
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
 
-//   // If authenticated, render the child routes
-//   return <Outlet />;
-// };
+  return <Outlet />;
+};
 
-// export default ProtectedRoute;
+export default ProtectedRoute;

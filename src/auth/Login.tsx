@@ -1,53 +1,57 @@
-import { Space, Image, Button, Form, Input } from "antd-mobile";
+import { Button } from "antd-mobile";
 import { FcGoogle } from "react-icons/fc";
-const Login = () => {
-    return (<>
-        <div style={{display:"flex", flexDirection:"column", width: '100%', height: '100vh', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-            
-            <Image src="/404" width={350} height={200} alt="Logo" fit='fill' />
-            
-            <div  style={{width: '100%', justifyContent: 'center', alignItems: 'center'}}>
-                <h2>Welcome to Give!</h2>
-                <p>Manage your contributions to your church right here!</p>
-                
-                <Button block color="primary" size="large"><div style={{display: 'flex', alignItems: 'center', textAlign: 'center', justifyContent: 'center'}}><FcGoogle size={30} />&nbsp;Login with Google</div></Button>
-                <p>Sign in with your username and password</p>
-                <Form
-                    layout='horizontal'
-                    footer={
-                        <div style={{ display: 'flex', flexDirection: 'column'}}>
-                            <Button block type="submit" color="primary" size="large" style={{borderRadius: '15px'}}>Login</Button>
-                            <a href="#" style={{ color: '#570A21' }}>Forgot Password?</a>
-                        </div>
-                    }
-                    style={{ marginTop: '15px', backgroundColor: '#f7f1f2', padding: '20px', borderRadius: '15px' }}
-                >
-                    <Form.Item
-                        name='email'
-                        label='Email'
-                        rules={[{ required: true, message: 'Type in your email' }]}
-                        style={{textAlign: 'left', backgroundColor: "#dcced2ff", color: "#964F66", borderRadius: '15px', marginBottom: '15px'}}
-                    >
-                        <Input onChange={console.log} placeholder='email goes here' />
-                    </Form.Item>
-                    <Form.Item
-                        name='password'
-                        label='Password'
-                        rules={[{ required: true, message: 'Type in your password' }]}
-                        style={{textAlign: 'left', backgroundColor: "#dcced2ff", color: "#964F66", borderRadius: '15px'}}
-                    >
-                        <Input type='password' onChange={console.log} placeholder='password goes here' />
-                    </Form.Item>
+import { useNavigate } from "react-router";
+import { useSignIn } from "../hooks/authHooks";
 
-                </Form>
-            </div>
-        
-            <Space direction="vertical" style={{width: '100%', alignItems: 'center', marginTop: '15vh'}}>
-                <p style={{color: '#570A21'}}>By signing in, you agree to our Terms and Conditions and Privacy Policy.</p>
-            </Space>
-            
+const Login = () => {
+  const navigate = useNavigate();
+  const signIn = useSignIn();
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn();
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8">
+      <div className="w-full max-w-[480px] flex flex-col items-start">
+        <div className="w-full h-48 bg-surface-container rounded-xl mb-6 flex items-center justify-center">
+          <span className="text-on-surface-variant text-sm">Logo</span>
         </div>
-    </>)
-}
+
+        <div className="w-full text-center">
+          <h1 className="font-display text-2xl font-bold text-on-surface tracking-tight mb-2">
+            Welcome to Give!
+          </h1>
+          <p className="text-on-surface-variant mb-6">
+            Manage your contributions to your church right here!
+          </p>
+
+          <Button
+            block
+            color="primary"
+            size="large"
+            className="!bg-primary-dark !text-on-primary !rounded-xl !h-14"
+            onClick={handleGoogleLogin}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <FcGoogle size={24} />
+              <span>Login with Google</span>
+            </div>
+          </Button>
+        </div>
+
+        <p className="text-primary-dark text-xs text-center mt-auto pt-8 opacity-80">
+          By signing in, you agree to our Terms and Conditions and Privacy
+          Policy.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export default Login;

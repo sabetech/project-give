@@ -1,28 +1,28 @@
-export type TUser = {
-    name: string
-    email: string
-    img_url?: string
-    id?: number
-    created_at?: string
-    hasPermission?: (permission: TPermission) => boolean
-    hasRole?: (role: TRole) => boolean
-    
-}
-
 export type TRole = {
-    id?: number
+    id: string
     name: string
+    created: string
+    updated: string
 }
 
 export type TPermission = {
+    id: string
     name: string
+    created: string
+    updated: string
 }
 
-export type TUserResponse = {
-    data: {
-        token: string,
-        user: TUser
-    }
-    message: string
-    success: boolean
+export type TMember = {
+    id: string
+    email: string
+    name: string
+    avatar?: string
+    role?: TRole
+    created: string
+    updated: string
+    verified: boolean
+    collectionId: string
+    collectionName: string
 }
+
+export type TUser = TMember

@@ -1,89 +1,64 @@
-// import { TUser, TPermission, TRole } from "../types/user";
-// import * as StorageKeys from "../constants/storagekeys";
-// // import { QueryFunction, useMutation, useQuery } from "react-query";
-// // import * as apiClient from "../services/UserManagement";
-// import { useState } from "react";
+import pb from '../lib/pocketbase';
+import type { TUser } from '../types/user';
+import { useMutation } from '@tanstack/react-query';
 
-// type signInType = {
-//     token: string,
-//     user: TUser,
-//     tokenType: string
-// }
-// export const useSignIn = () => {
-    
-//     return ({
-//         token: token,
-//         user: user,
-//         tokenType: tokenType
-//     }: signInType) => {
-//         localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
-//         localStorage.setItem(StorageKeys.TOKEN, token);
-//         localStorage.setItem(StorageKeys.TOKEN_TYPE, tokenType);
+export const useSignIn = () => {
+    return async () => {
+        try {
+            const authData = await pb.collection('users').authWithOAuth2({ provider: 'google' });
+            return authData;
+        } catch (error) {
+            console.error('Sign in failed:', error);
+            throw error;
+        }
+    };
+};
 
-//         return true
-//     };
-// }
+export const useAuthUser = () => {
+    return (): TUser | null => {
+        if (!pb.authStore.isValid) return null;
+        return pb.authStore.record as unknown as TUser;
+    };
+};
 
-// export const useAuthUser = () => {
+export const useAuthToken = () => {
+    return pb.authStore.token;
+};
 
-//     return (): TUser => {
-//         const user = JSON.parse(localStorage.getItem(StorageKeys.USER) ?? "{}") as TUser;
-//         user.hasPermission = (permission: TPermission) => {
-//             return user.permissions.map((p: TPermission) => p.name).includes(permission.name);
-//         }
-//         user.hasRole = (role: TRole) => {
-//             return user.roles.map((r: TRole) => r.name).includes(role.name);
-//         }
-//         return user
-//     };
-// }
+export const useSignOut = () => {
+    return () => {
+        pb.authStore.clear();
+    };
+};
 
-// export const useAuthToken = () => {
-//     return localStorage.getItem(StorageKeys.TOKEN);
-// }
+export const useIsAuthenticated = () => {
+    return pb.authStore.isValid;
+};
 
-// export const useSignOut = () => {
-//     return () => {
-//         localStorage.removeItem(StorageKeys.USER);
-//         localStorage.removeItem(StorageKeys.TOKEN);
-//         localStorage.removeItem(StorageKeys.TOKEN_TYPE);
-//     }
-// }
+export const useUserImageUpload = () => {
+    return useMutation({
+        mutationFn: async (image: File) => {
+            const user = pb.authStore.record;
+            if (!user) throw new Error('Not authenticated');
 
-// export const useIsAuthenticated = () => {
+            const formData = new FormData();
+            formData.append('avatar', image);
 
-//     const token = localStorage.getItem(StorageKeys.TOKEN);
-//     console.log("token", token)
-//     if (token === null) {
-//         return false
-//     }
+            const record = await pb.collection('users').update(user.id, formData);
+            return record;
+        },
+        onSuccess: (data) => {
+            console.log('Avatar updated:', data);
+        },
+        onError: (error) => {
+            console.error('Upload failed:', error);
+        }
+    });
+};
 
-//     return true
-// }
-
-// const _uploadImage = async (image: any) => {
-//     const { data } = await apiClient.uploadUserPhoto(image)
-//     return data;
-// };
-
-// export const useUserImageUpload = () => {
-
-//     return useMutation(
-//         {
-//             mutationFn: (values: any) => _uploadImage(values),
-//             onSuccess: (data) => {
-//                console.log("Data::", data)
-//             },
-//             onError: (error) => {
-                
-//             }
-//         }
-//     )
-
-// }
-
-// const _getUser = async (email: string) => {
-
-//     const { data } = await apiClient.getUser(email)
-//     return data.data
-// }
+export const useGetUser = () => {
+    return async (id: string) => {
+        const record = await pb.collection('users').getOne(id);
+        return record;
+    };
+};

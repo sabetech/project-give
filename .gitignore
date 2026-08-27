@@ -12,6 +12,19 @@ dist
 dist-ssr
 *.local
 
+# PocketBase
+pocketbase
+pb_data/
+pb_migrations/
+pb_hooks/
+pb_public/
+pb.log
+
+# Environment
+.env
+.env.local
+google_client_keys
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
