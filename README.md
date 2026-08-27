@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# Give
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A church giving and donation tracking app built with React, TypeScript, and PocketBase.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Google OAuth2 authentication
+- Record tithes, offerings, and other donations
+- View giving history
+- Profile management with Google profile picture
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend:** React 19, TypeScript, Vite 7, Tailwind CSS 4, Ant Design Mobile
+- **Backend:** PocketBase (self-hosted)
+- **State Management:** React Query (TanStack Query)
+- **Routing:** React Router 7
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+
+- PocketBase binary
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start PocketBase:
+   ```bash
+   ./bin/pocketbase serve --dev --http=127.0.0.1:8091
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://127.0.0.1:5173](http://127.0.0.1:5173)
+
+### Google OAuth2 Setup
+
+1. Create a project in [Google Cloud Console](https://console.cloud.google.com)
+2. Enable the Google+ API
+3. Create OAuth 2.0 credentials (Web application)
+4. Add `http://127.0.0.1:8091/api/oauth2-redirect` as an authorized redirect URI
+5. Add your Google Client ID and Secret to PocketBase via the admin UI or bootstrap hook
+
+## Project Structure
+
+```
+src/
+  auth/           # Login page
+  components/     # Reusable UI components
+  hooks/          # Custom React hooks (auth, data fetching)
+  lib/            # PocketBase client config
+  pages/          # Page components (Home, Payment, History, Settings)
+  routes/         # Route definitions
+  services/       # API service functions
+  types/          # TypeScript type definitions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
