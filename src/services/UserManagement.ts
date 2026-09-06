@@ -1,17 +1,17 @@
-import pb from '../lib/pocketbase';
+import api from '../lib/api';
 
 export const uploadUserPhoto = async (image: File) => {
-  const user = pb.authStore.record;
-  if (!user) throw new Error('Not authenticated');
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error('Not authenticated');
 
-  const formData = new FormData();
-  formData.append('avatar', image);
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const userId = payload.userId;
 
-  const record = await pb.collection('users').update(user.id, formData);
-  return record;
+  const result = await api.updateUserAvatar(userId, image);
+  return result;
 };
 
 export const getUser = async (id: string) => {
-  const record = await pb.collection('users').getOne(id);
+  const record = await api.getUser(id);
   return record;
 };

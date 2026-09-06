@@ -1,3 +1,3 @@
-import pb from '../lib/pocketbase';
+import api from '../lib/api';
 
-export default pb;
+export default api;

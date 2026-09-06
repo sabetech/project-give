@@ -1,5 +1,6 @@
 import { Card, Avatar } from 'antd-mobile';
 import { useAuthUser } from '../hooks/authHooks';
+import api from '../lib/api';
 
 const ProfileCard = () => {
     const getUser = useAuthUser();
@@ -17,7 +18,7 @@ const ProfileCard = () => {
         >
             <div className="flex items-center gap-4">
                 <Avatar
-                    src={user?.avatar ? `http://127.0.0.1:8091/api/files/users/${user.id}/${user.avatar}` : ''}
+                    src={user?.avatar ? api.getAvatarUrl(user.id, user.avatar) : ''}
                     className="!w-16 !h-16 !rounded-full"
                 />
                 <div>

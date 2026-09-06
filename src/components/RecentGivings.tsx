@@ -14,8 +14,9 @@ const formatDate = (dateStr: string) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-const formatAmount = (amount: number) => {
-  return `$${amount.toFixed(2)}`
+const formatAmount = (amount: number | string) => {
+  const num = typeof amount === 'number' ? amount : parseFloat(String(amount || '0'))
+  return `GHc ${num.toFixed(2)}`
 }
 
 const RecentGivings = () => {

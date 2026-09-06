@@ -20,7 +20,11 @@ const Login = () => {
     <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8">
       <div className="w-full max-w-[480px] flex flex-col items-start">
         <div className="w-full h-48 bg-surface-container rounded-xl mb-6 flex items-center justify-center">
-          <span className="text-on-surface-variant text-sm">Logo</span>
+          <img 
+            src="/makarios_log_trans_bg-a8a80d8d.png" 
+            alt="The Makarios Church" 
+            className="w-48 h-auto"
+          />
         </div>
 
         <div className="w-full text-center">

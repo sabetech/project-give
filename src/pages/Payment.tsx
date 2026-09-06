@@ -55,7 +55,7 @@ const Payment = () => {
       <Navbar title={`Give - ${typeLabels[givingType]}`} />
       <div className="px-4 mt-20">
         <div className="bg-surface-container-low rounded-xl p-4 mb-4">
-          <label className="text-on-surface-variant text-sm mb-2 block">Amount ($)</label>
+          <label className="text-on-surface-variant text-sm mb-2 block">Amount (GHc)</label>
           <Input
             placeholder="0.00"
             type="number"

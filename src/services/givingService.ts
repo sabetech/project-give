@@ -1,4 +1,4 @@
-import pb from '../lib/pocketbase';
+import api from '../lib/api';
 import type { TGiving, GivingType } from '../types/giving';
 
 export const createGiving = async (data: {
@@ -7,39 +7,40 @@ export const createGiving = async (data: {
   date: string;
   description?: string;
 }) => {
-  const user = pb.authStore.record;
-  if (!user) throw new Error('Not authenticated');
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error('Not authenticated');
 
-  const record = await pb.collection('givings').create({
-    ...data,
-    user: user.id,
-  });
-  return record as unknown as TGiving;
+  const result = await api.createGiving(data);
+  return result as unknown as TGiving;
 };
 
 export const getGivings = async (page = 1, perPage = 30) => {
-  const result = await pb.collection('givings').getList(page, perPage, {
-    sort: '-date,-created',
-    expand: 'user',
-  });
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error('Not authenticated');
+
+  const result = await api.getGivings(page, perPage, '-date,-created');
   return result;
 };
 
 export const getRecentGivings = async (limit = 5) => {
-  const result = await pb.collection('givings').getList(1, limit, {
-    sort: '-date,-created',
-    expand: 'user',
-  });
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error('Not authenticated');
+
+  const result = await api.getGivings(1, limit, '-date,-created');
   return result.items as unknown as TGiving[];
 };
 
 export const getGivingById = async (id: string) => {
-  const record = await pb.collection('givings').getOne(id, {
-    expand: 'user',
-  });
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error('Not authenticated');
+
+  const record = await api.getGiving(id);
   return record as unknown as TGiving;
 };
 
 export const deleteGiving = async (id: string) => {
-  await pb.collection('givings').delete(id);
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error('Not authenticated');
+
+  await api.deleteGiving(id);
 };
