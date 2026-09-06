@@ -86,7 +86,7 @@ class ApiClient {
     });
   }
 
-  async getGivings(page = 1, perPage = 30, sort = '-date,-created') {
+  async getGivings(page = 1, perPage = 30, sort = '-date,-created'): Promise<{ items: unknown[] }> {
     const params = new URLSearchParams({
       page: page.toString(),
       perPage: perPage.toString(),
